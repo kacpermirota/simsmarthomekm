@@ -1,0 +1,57 @@
+.env
+*.env
+
+# Sekrety Home Assistant - obecnie tylko placeholder, ale zasada ma
+# obowiązywać zanim ktoś wpisze tu coś realnego (dodane 19.09.2026 przy
+# poprawkach z audytu promotora)
+ha-config/secrets.yaml
+__pycache__/
+*.pyc
+inz_projekt_struktura/
+treść/
+modyfikacje/
+archiwum/
+śmietnik/
+generowanie_danych_v2/analizy/wyniki
+mosquitto/log/
+mosquitto/data
+*.pem
+*.pem.key
+*.pem.crt
+
+
+ha-config/.storage/
+ha-config/.cache/
+ha-config/.ha_run.lock
+ha-config/.HA_VERSION
+ha-config/home-assistant.log
+ha-config/home-assistant.log.*
+ha-config/home-assistant_v2.db
+ha-config/home-assistant_v2.db-wal
+ha-config/home-assistant_v2.db-shm
+
+nodered-data/
+
+mosquitto/config/passwordfile
+
+
+
+grafana-data/
+influxdb-data/
+mosquitto/data/
+mosquitto/log/
+
+
+eksport_s3/
+
+
+generowanie_danych_v2/wyjscie/
+generowanie_danych_v2/analizy/wyniki/
+
+
+ha-config/home-assistant_v2.db-wal
+ha-config/home-assistant_v2.db-shm
+
+
+wytyczne/
+praca dyplomowa - wytyczne*.pdf

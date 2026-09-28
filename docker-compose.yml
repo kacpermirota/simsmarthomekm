@@ -1,0 +1,64 @@
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    volumes:
+      - ./ha-config:/config
+    environment:
+      - TZ=Europe/Warsaw
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8123:8123"
+    depends_on:
+      - mosquitto
+    networks:
+      - iot_net
+
+  mosquitto:
+    container_name: mosquitto
+    image: eclipse-mosquitto:latest
+    ports:
+      - "127.0.0.1:1883:1883"
+      - "127.0.0.1:9001:9001"
+    volumes:
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    restart: unless-stopped
+    networks:
+      - iot_net
+
+  nodered:
+    container_name: nodered
+    image: nodered/node-red:latest
+    ports:
+      - "127.0.0.1:1880:1880"
+    volumes:
+      - ./nodered-data:/data
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+    networks:
+      - iot_net
+      - app_net
+
+  influxdb:
+    container_name: influxdb
+    image: influxdb:2.7
+    ports:
+      - "127.0.0.1:8086:8086"
+    volumes:
+      - ./influxdb-data:/var/lib/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_ADMIN_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=smarthome
+      - DOCKER_INFLUXDB_INIT_BUCKET=energy
+    restart: unless-stopped
+    networks:
+      - app_net
+
+networks:
+  iot_net:
+  app_net:

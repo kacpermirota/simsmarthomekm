@@ -1,0 +1,207 @@
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+
+input_boolean:
+  # Wiatrołap (parter)
+  czujnik_drzwi_wejsciowe:
+    name: "[1] Czujnik kontaktowy - drzwi wejściowe"
+    icon: mdi:door
+  czujnik_ruchu_wiatrolap:
+    name: "[2] Czujnik ruchu - Wiatrołap"
+    icon: mdi:motion-sensor
+  oswietlenie_wiatrolap:
+    name: "[3] Oświetlenie - Wiatrołap"
+    icon: mdi:lightbulb
+
+  wychodze:
+    name: "[4] Przełącznik trybu nieobecności - Wiatrołap"
+    icon: mdi:exit-run
+  # Salon (parter)
+  tv_salon:
+    name: "[5] Telewizor - Salon"
+    icon: mdi:television
+  grzejnik_salon:
+    name: "[6] Grzejnik elektryczny - Salon"
+    icon: mdi:radiator
+  oswietlenie_salon:
+    name: "[7] Oświetlenie - Salon"
+    icon: mdi:lightbulb
+  # Kuchnia (parter)
+  lodowka_kuchnia:
+    name: "[8] Lodówka - Kuchnia"
+    icon: mdi:fridge-outline
+  czajnik_kuchnia:
+    name: "[9] Czajnik elektryczny - Kuchnia"
+    icon: mdi:kettle
+  ekspres_kuchnia:
+    name: "[10] Ekspres do kawy - Kuchnia"
+    icon: mdi:coffee-maker
+  oswietlenie_kuchnia:
+    name: "[11] Oświetlenie - Kuchnia"
+    icon: mdi:lightbulb
+  # Korytarz piętra
+  czujnik_ruchu_korytarz_pietro:
+    name: "[12] Czujnik ruchu - Korytarz piętra"
+    icon: mdi:motion-sensor
+  grzejnik_korytarz_pietro:
+    name: "[13] Grzejnik elektryczny - Korytarz piętra"
+    icon: mdi:radiator
+  oswietlenie_korytarz_pietro:
+    name: "[14] Oświetlenie - Korytarz piętra"
+    icon: mdi:lightbulb
+  # Pokój 2-osobowy
+  komputery_pokoj_dzieci:
+    name: "[15] Laptopy (wspólny obwód) - Pokój 2-osobowy"
+    icon: mdi:laptop
+  # Sypialnia rodziców
+  tv_sypialnia_rodzicow:
+    name: "[16] Telewizor - Sypialnia rodziców"
+    icon: mdi:television
+
+
+template:
+  - binary_sensor:
+      - name: "[1] Czujnik kontaktowy - drzwi wejściowe"
+        unique_id: binary_sensor_czujnik_drzwi_wejsciowe
+        device_class: door
+        state: "{{ is_state('input_boolean.czujnik_drzwi_wejsciowe', 'on') }}"
+      - name: "[2] Czujnik ruchu - Wiatrołap"
+        unique_id: binary_sensor_czujnik_ruchu_wiatrolap
+        device_class: motion
+        state: "{{ is_state('input_boolean.czujnik_ruchu_wiatrolap', 'on') }}"
+      - name: "[8] Lodówka - Kuchnia"
+        unique_id: binary_sensor_lodowka_kuchnia
+        device_class: running
+        state: "{{ is_state('input_boolean.lodowka_kuchnia', 'on') }}"
+      - name: "[9] Czajnik elektryczny - Kuchnia"
+        unique_id: binary_sensor_czajnik_kuchnia
+        device_class: heat
+        state: "{{ is_state('input_boolean.czajnik_kuchnia', 'on') }}"
+      - name: "[12] Czujnik ruchu - Korytarz piętra"
+        unique_id: binary_sensor_czujnik_ruchu_korytarz_pietro
+        device_class: motion
+        state: "{{ is_state('input_boolean.czujnik_ruchu_korytarz_pietro', 'on') }}"
+  - light:
+      - name: "[3] Oświetlenie - Wiatrołap"
+        unique_id: light_oswietlenie_wiatrolap
+        state: "{{ is_state('input_boolean.oswietlenie_wiatrolap', 'on') }}"
+        turn_on:
+          action: input_boolean.turn_on
+          target: { entity_id: input_boolean.oswietlenie_wiatrolap }
+        turn_off:
+          action: input_boolean.turn_off
+          target: { entity_id: input_boolean.oswietlenie_wiatrolap }
+      - name: "[7] Oświetlenie - Salon"
+        unique_id: light_oswietlenie_salon
+        state: "{{ is_state('input_boolean.oswietlenie_salon', 'on') }}"
+        turn_on:
+          action: input_boolean.turn_on
+          target: { entity_id: input_boolean.oswietlenie_salon }
+        turn_off:
+          action: input_boolean.turn_off
+          target: { entity_id: input_boolean.oswietlenie_salon }
+      - name: "[11] Oświetlenie - Kuchnia"
+        unique_id: light_oswietlenie_kuchnia
+        state: "{{ is_state('input_boolean.oswietlenie_kuchnia', 'on') }}"
+        turn_on:
+          action: input_boolean.turn_on
+          target: { entity_id: input_boolean.oswietlenie_kuchnia }
+        turn_off:
+          action: input_boolean.turn_off
+          target: { entity_id: input_boolean.oswietlenie_kuchnia }
+      - name: "[14] Oświetlenie - Korytarz piętra"
+        unique_id: light_oswietlenie_korytarz_pietro
+        state: "{{ is_state('input_boolean.oswietlenie_korytarz_pietro', 'on') }}"
+        turn_on:
+          action: input_boolean.turn_on
+          target: { entity_id: input_boolean.oswietlenie_korytarz_pietro }
+        turn_off:
+          action: input_boolean.turn_off
+          target: { entity_id: input_boolean.oswietlenie_korytarz_pietro }
+  - switch:
+      - name: "[4] Przełącznik trybu nieobecności - Wiatrołap"
+        unique_id: switch_wychodze
+        state: "{{ is_state('input_boolean.wychodze', 'on') }}"
+        turn_on:
+          action: input_boolean.turn_on
+          target: { entity_id: input_boolean.wychodze }
+        turn_off:
+          action: input_boolean.turn_off
+          target: { entity_id: input_boolean.wychodze }
+      - name: "[5] Telewizor - Salon"
+        unique_id: switch_tv_salon
+        state: "{{ is_state('input_boolean.tv_salon', 'on') }}"
+        turn_on:
+          action: input_boolean.turn_on
+          target: { entity_id: input_boolean.tv_salon }
+        turn_off:
+          action: input_boolean.turn_off
+          target: { entity_id: input_boolean.tv_salon }
+      - name: "[6] Grzejnik elektryczny - Salon"
+        unique_id: switch_grzejnik_salon
+        state: "{{ is_state('input_boolean.grzejnik_salon', 'on') }}"
+        turn_on:
+          action: input_boolean.turn_on
+          target: { entity_id: input_boolean.grzejnik_salon }
+        turn_off:
+          action: input_boolean.turn_off
+          target: { entity_id: input_boolean.grzejnik_salon }
+      - name: "[10] Ekspres do kawy - Kuchnia"
+        unique_id: switch_ekspres_kuchnia
+        state: "{{ is_state('input_boolean.ekspres_kuchnia', 'on') }}"
+        turn_on:
+          action: input_boolean.turn_on
+          target: { entity_id: input_boolean.ekspres_kuchnia }
+        turn_off:
+          action: input_boolean.turn_off
+          target: { entity_id: input_boolean.ekspres_kuchnia }
+      - name: "[13] Grzejnik elektryczny - Korytarz piętra"
+        unique_id: switch_grzejnik_korytarz_pietro
+        state: "{{ is_state('input_boolean.grzejnik_korytarz_pietro', 'on') }}"
+        turn_on:
+          action: input_boolean.turn_on
+          target: { entity_id: input_boolean.grzejnik_korytarz_pietro }
+        turn_off:
+          action: input_boolean.turn_off
+          target: { entity_id: input_boolean.grzejnik_korytarz_pietro }
+      - name: "[15] Laptopy (wspólny obwód) - Pokój 2-osobowy"
+        unique_id: switch_komputery_pokoj_dzieci
+        state: "{{ is_state('input_boolean.komputery_pokoj_dzieci', 'on') }}"
+        turn_on:
+          action: input_boolean.turn_on
+          target: { entity_id: input_boolean.komputery_pokoj_dzieci }
+        turn_off:
+          action: input_boolean.turn_off
+          target: { entity_id: input_boolean.komputery_pokoj_dzieci }
+      - name: "[16] Telewizor - Sypialnia rodziców"
+        unique_id: switch_tv_sypialnia_rodzicow
+        state: "{{ is_state('input_boolean.tv_sypialnia_rodzicow', 'on') }}"
+        turn_on:
+          action: input_boolean.turn_on
+          target: { entity_id: input_boolean.tv_sypialnia_rodzicow }
+        turn_off:
+          action: input_boolean.turn_off
+          target: { entity_id: input_boolean.tv_sypialnia_rodzicow }
+
+mqtt:
+  sensor:
+    - name: "Moc chwilowa - Dom"
+      state_topic: "home/energy/dom"
+      value_template: "{{ value_json.power }}"
+      unit_of_measurement: "kW"
+      device_class: power
+
+
+mqtt_statestream:
+  base_topic: homeassistant
+  publish_attributes: false
+  publish_timestamps: false
